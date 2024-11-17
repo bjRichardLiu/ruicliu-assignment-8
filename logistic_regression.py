@@ -24,7 +24,7 @@ def generate_ellipsoid_clusters(distance, n_samples=100, cluster_std=0.5):
     
     # Implement: Shift the second cluster along the x-axis and y-axis for a given distance
     X2[:, 0] += distance
-    X2[:, 1] += distance
+    X2[:, 1] -= distance
     y2 = np.ones(n_samples)
 
     # Combine the clusters into one dataset
@@ -63,6 +63,8 @@ def do_experiments(start, end, step_num):
         # Implement: Plot the dataset
         plt.subplot(n_rows, n_cols, i)
         plt.scatter(X[y == 0, 0], X[y == 0, 1], color='blue', label='Class 0')
+        plt.scatter(X[y == 1, 0], X[y == 1, 1], color='red', label='Class 1')
+        plt.legend()
 
         # Implement: Calculate and store logistic loss
         loss = -np.mean(y * np.log(model.predict_proba(X)[:, 1]) + (1 - y) * np.log(model.predict_proba(X)[:, 0]))
@@ -79,6 +81,7 @@ def do_experiments(start, end, step_num):
         intercept = -beta0 / beta2
         slope_list.append(slope)
         intercept_list.append(intercept)
+        print(f"Shift Distance: {distance:.2f}, Slope: {slope:.2f}, Intercept: {intercept:.2f}")
 
         # Plot fading red and blue contours for confidence levels
         contour_levels = [0.7, 0.8, 0.9]
@@ -140,7 +143,6 @@ def do_experiments(start, end, step_num):
     plt.title("Shift Distance vs Beta1 / Beta2 (Slope)")
     plt.xlabel("Shift Distance")
     plt.ylabel("Beta1 / Beta2")
-    plt.ylim(-2, 0)
     plt.plot(shift_distances, slope_list, marker='o')
 
     # Implement: Plot beta0 / beta2 (Intercept ratio)
